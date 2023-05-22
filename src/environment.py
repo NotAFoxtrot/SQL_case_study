@@ -58,11 +58,8 @@ def convert_sql_to_xlsx(sql_in, xlsx_out, xlsx_name=None):
         lines= f.read()
 
     df = pd.read_sql(lines, conn)
-    
-    if xlsx_name == None:
-        df.to_excel(xlsx_out, sheet_name= sql_in)
-    else:
-        df.to_excel(xlsx_out, sheet_name = xlsx_name)
+
+    df.to_excel(xlsx_out, sheet_name= sql_in)
 
 #convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql','../excel_reports','Test.xlsx')
 
