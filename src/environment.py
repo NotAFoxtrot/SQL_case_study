@@ -34,12 +34,12 @@ conn = create_connection(PG_DATABASE,PG_USER,PG_PASSWORD, PG_HOST,PG_PORT)
 
 c = conn.cursor()
 
-with open('../sql_queries/HR_Question_1.sql') as f:
-    lines= f.read()
+# with open('../sql_queries/HR_Question_1.sql') as f:
+#     lines= f.read()
 
 
-df = pd.read_sql(lines, conn)
-df.to_excel('../excel_reports/Test.xlsx', sheet_name='Test.xlsx')
+# df = pd.read_sql(lines, conn)
+# df.to_excel('../excel_reports/Test.xlsx', sheet_name='Test.xlsx')
 
 def convert_sql_to_xlsx(sql_in, xlsx_out, xlsx_name=None):
     """
@@ -57,9 +57,15 @@ def convert_sql_to_xlsx(sql_in, xlsx_out, xlsx_name=None):
     with open(sql_in) as f:
         lines= f.read()
 
-    df = pd.read_sql(lines, conn)
+    sheet_name = xlsx_name if xlsx_name else sql_in
 
-    df.to_excel(xlsx_out, sheet_name= sql_in)
+    xlsx_file = f'{xlsx_out}/{xlsx_name}.xlsx' if xlsx_name else f'{xlsx_out}/{sql_in}.xlsx' 
+
+    df = pd.read_sql(lines, conn)
+        
+    df.to_excel(xlsx_file, sheet_name=sheet_name)
+
+convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql', '../excel_reports', xlsx_name='Test 1')
 
 #convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql','../excel_reports','Test.xlsx')
 
