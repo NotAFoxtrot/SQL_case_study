@@ -4,6 +4,7 @@ from psycopg2 import OperationalError
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import argparse as arg
 
 load_dotenv()
 
@@ -65,7 +66,7 @@ def convert_sql_to_xlsx(sql_in, xlsx_out, xlsx_name=None):
         
     df.to_excel(xlsx_file, sheet_name=sheet_name)
 
-convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql', '../excel_reports', xlsx_name='Test 1')
+# convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql', '../excel_reports', xlsx_name='Test 1')
 
 #convert_sql_to_xlsx('../sql_queries/HR_Question_1.sql','../excel_reports','Test.xlsx')
 
@@ -84,10 +85,33 @@ def convert_directory_of_queries(sql_in_dir, xlsx_out_dir):
     Returns:
         None
     """
+    for i in os.listdir(sql_in_dir):
+        if i.endswith('.sql'):
+            with open(sql_in_dir + '/' + i) as f:
+                lines = f.read()
+            bettertxt = i.replace('.sql', '')
+            df = pd.read_sql(lines, conn)
+            df.to_excel(xlsx_out_dir + '/' + bettertxt + '.xlsx')
+
     pass
+# convert_directory_of_queries('../sql_queries', '../excel_reports')
+
+# with open('HR_Question_1.sql') as f:
+#     lines = f.read()
 
 def convert_sql_to_xlsx_from_cli():
     """
     Converts directory of sql queries to xlsx from CLI.
     """
+    
+    parser = arg.ArgumentParser()
+    parser.add_argument("in_path", help = "give the path that has the sql directory in it")
+    parser.add_argument("out_path", help = "give the path that the sql directory should go to")
+    args = parser.parse_args()
+    convert_directory_of_queries(args.in_path, args.out_path)
+    print(args)
+
     pass
+
+if __name__ == '__main__':
+    convert_sql_to_xlsx_from_cli()
